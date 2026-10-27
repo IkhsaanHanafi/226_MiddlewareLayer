@@ -118,7 +118,7 @@ app.post('/biodata', validateBody(biodataSchema), async(req,res)=>{
 })
 
 app.put(
-    "biodata/:id",
+    "/biodata/:id",
     validateParams(idSchema),
     validateBody(
         biodataSchema
