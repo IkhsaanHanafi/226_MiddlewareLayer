@@ -18,7 +18,6 @@ const pool = new Pool({
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-
 // Middleware Logging
 app.use((req, res, next) => {
     const start = Date.now()
@@ -80,3 +79,25 @@ function validateBody(schema){
         next()
     }
 }
+
+function validateParams(schema){
+    return(req, res, next) => {
+        const { error, value } = schema.validate(req.params,{
+            abortEarly:false, convert: true, allowUnknown: false
+        });
+        if(error){
+            return errorResponse(
+                res,
+                'Parameter Tidak Valid',
+                400,
+                error.details.map(item => ({
+                    field: item.path.join('.'),
+                    message: item.message,
+                }))
+            )
+        }
+        req.params = value,
+        next()
+    }
+}
+
